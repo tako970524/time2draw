@@ -1,0 +1,261 @@
+/* MainMenu.css：模式選單版面；卡片以 flex-basis 向右展開，clip-path 保留平行四邊形。 */
+
+/* 修改下列變數可統一調整卡片比例與展開動畫。 */
+/* 整個模式選單及可調參數，垂直分成標題、卡片列表與操作提示。 */
+.ModeMenu {
+    --card-width: clamp(5.5rem, 12vw, 12rem); /* 收合卡片寬度，也就是模式選擇區寬度。 */
+    --panel-width: clamp(12rem, 26vw, 23rem); /* 展開後額外增加的子模式區寬度。 */
+    --card-slant: clamp(1rem, 2.5vw, 2.2rem); /* 平行四邊形上下角的水平偏移量。 */
+    --menu-gap: clamp(0.35rem, 0.6vw, 0.75rem); /* 模式卡片之間的間距。 */
+    --expand-duration: 400ms; /* 卡片寬度展開動畫時間。 */
+    width: 100%; /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+    height: 100dvh; /* 顯示高度；dvh 會隨行動瀏覽器可視高度變動。 */
+    display: flex; /* 指定區塊、flex、grid 或隱藏布局。 */
+    flex-direction: column; /* 排列方向，row 為橫向、column 為直向。 */
+    gap: clamp(1rem, 3vh, 2rem); /* 子元素之間的間距。 */
+    padding: clamp(1rem, 4vw, 4rem) 0 max(1rem, env(safe-area-inset-bottom)); /* 內容與容器邊界間的內距。 */
+    background: var(--color-background); /* 背景色或背景設定。 */
+    overflow: hidden; /* 超出容器範圍的內容如何處理。 */
+}
+
+/* 選單標題與操作提示的左右留白，不隨卡片橫向捲動。 */
+.MenuHeader, .MenuFooter {
+    padding-inline: var(--page-gutter); /* 左右兩側內距。 */
+    flex: 0 0 auto; /* 伸展、縮小與初始尺寸的設定。 */
+}
+
+/* 模式選單主標題的響應式字級。 */
+.MenuHeader h1 {
+    font-size: clamp(1.4rem, 3vw, 2.5rem); /* 字級；clamp 限制響應式字體的最小及最大尺寸。 */
+    margin-block: 0.4rem; /* 上下外距。 */
+}
+
+/* 說明與操作提示文字。 */
+.MenuHeader p, .MenuFooter {
+    color: var(--color-muted); /* 文字或繼承的前景色。 */
+    font-size: clamp(0.75rem, 1.2vw, 0.95rem); /* 字級；clamp 限制響應式字體的最小及最大尺寸。 */
+}
+
+/* 標題上方小字的字距。 */
+.MenuEyebrow {
+    letter-spacing: 0.2em; /* 字元間距。 */
+}
+
+/* 水平排列的卡片列表，螢幕不足時只在此區左右捲動。 */
+.ModeList {
+    flex: 1; /* 伸展、縮小與初始尺寸的設定。 */
+    min-height: 0; /* 最小高度；0 允許工作區縮小，按鈕則保留觸控範圍。 */
+    display: flex; /* 指定區塊、flex、grid 或隱藏布局。 */
+    gap: var(--menu-gap); /* 子元素之間的間距。 */
+    padding: 0.5rem var(--page-gutter) 1rem; /* 內容與容器邊界間的內距。 */
+    overflow-x: auto; /* 水平方向超出範圍時的捲動或裁切。 */
+    overflow-y: hidden; /* 垂直方向超出範圍時的捲動或裁切。 */
+    scrollbar-color: #666 #181818; /* 捲動條與軌道的顏色。 */
+    scrollbar-width: thin; /* 捲動條粗細。 */
+}
+
+/* 單張平行四邊形卡片，收合時裁掉右側子模式區。 */
+.ModeCard {
+    position: relative; /* 定位模式；relative 作為參照、absolute 疊圖、fixed 固定於視窗。 */
+    flex: 0 0 var(--card-width); /* 伸展、縮小與初始尺寸的設定。 */
+    min-width: 0; /* 最小寬度；0 可防止內容把 flex 區塊撐寬。 */
+    display: flex; /* 指定區塊、flex、grid 或隱藏布局。 */
+    min-height: 0; /* 最小高度；0 允許工作區縮小，按鈕則保留觸控範圍。 */
+    overflow: hidden; /* 超出容器範圍的內容如何處理。 */
+    background: var(--color-surface); /* 背景色或背景設定。 */
+    clip-path: polygon(var(--card-slant) 0, 100% 0, calc(100% - var(--card-slant)) 100%, 0 100%); /* 裁切卡片外觀，四個頂點形成平行四邊形。 */
+    transition: flex-basis var(--expand-duration) ease, background-color 180ms ease; /* 屬性變更時的過渡動畫。 */
+}
+
+/* 選中卡片加上子模式區的寬度，推動右側卡片。 */
+.ModeCard.is-expanded {
+    flex-basis: calc(var(--card-width) + var(--panel-width)); /* flex 主軸的初始尺寸，卡片展開時用它推動後方卡片。 */
+    background: #343434; /* 背景色或背景設定。 */
+}
+
+/* 滑鼠懸停或鍵盤焦點進入卡片時的亮色背景。 */
+.ModeCard:hover, .ModeCard:focus-within {
+    background: #404040; /* 背景色或背景設定。 */
+}
+
+/* 卡片左側模式選擇按鈕，展開後保持原寬度。 */
+.ModeButton {
+    flex: 0 0 var(--card-width); /* 伸展、縮小與初始尺寸的設定。 */
+    width: var(--card-width); /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+    position: relative; /* 定位模式；relative 作為參照、absolute 疊圖、fixed 固定於視窗。 */
+    display: grid; /* 指定區塊、flex、grid 或隱藏布局。 */
+    place-items: center; /* 同時設定 grid 的水平與垂直對齊。 */
+    border: 0; /* 邊框寬度、樣式及顏色。 */
+    background: transparent; /* 背景色或背景設定。 */
+    color: var(--color-text); /* 文字或繼承的前景色。 */
+    cursor: pointer; /* 滑鼠游標樣式。 */
+}
+
+/* 旋轉的模式名稱，保留原本接近垂直的文字風格。 */
+.ModeTitle {
+    font-size: clamp(0.95rem, 1.65vw, 1.5rem); /* 字級；clamp 限制響應式字體的最小及最大尺寸。 */
+    font-weight: bold; /* 字體粗細。 */
+    letter-spacing: 0.08em; /* 字元間距。 */
+    white-space: nowrap; /* 文字換行方式，nowrap 表示不換行。 */
+    transform: rotate(-87.5deg); /* 平移、旋轉、傾斜或縮放，不改變資料座標。 */
+}
+
+/* 卡片上方的模式序號。 */
+.ModeNumber {
+    position: absolute; /* 定位模式；relative 作為參照、absolute 疊圖、fixed 固定於視窗。 */
+    top: 1.5rem; /* 距離定位參照上緣的位置。 */
+    opacity: 0.5; /* 透明度，0 為完全透明、1 為不透明。 */
+    font-size: 0.75rem; /* 字級；clamp 限制響應式字體的最小及最大尺寸。 */
+}
+
+/* 卡片下方展開或收合的加減號。 */
+.ModeToggle {
+    position: absolute; /* 定位模式；relative 作為參照、absolute 疊圖、fixed 固定於視窗。 */
+    bottom: 1.5rem; /* 距離定位參照下緣的位置。 */
+    font-size: 1.5rem; /* 字級；clamp 限制響應式字體的最小及最大尺寸。 */
+    opacity: 0.65; /* 透明度，0 為完全透明、1 為不透明。 */
+}
+
+/* 將模式按鈕焦點框放在卡片內，避免被斜切邊界裁掉。 */
+.ModeButton:focus-visible {
+    outline-offset: -0.5rem; /* 焦點外框與邊界的距離。 */
+}
+
+/* 卡片右半部的子模式區，收合時不可見且不能操作。 */
+.SubModePanel {
+    flex: 0 0 var(--panel-width); /* 伸展、縮小與初始尺寸的設定。 */
+    width: var(--panel-width); /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+    display: flex; /* 指定區塊、flex、grid 或隱藏布局。 */
+    flex-direction: column; /* 排列方向，row 為橫向、column 為直向。 */
+    justify-content: center; /* 子元素在主軸的排列與對齊。 */
+    padding: 1rem calc(var(--card-slant) + 0.5rem) 1rem 0.5rem; /* 內容與容器邊界間的內距。 */
+    opacity: 0; /* 透明度，0 為完全透明、1 為不透明。 */
+    visibility: hidden; /* 是否顯示並接受互動，同時保留布局位置。 */
+    overflow-y: auto; /* 垂直方向超出範圍時的捲動或裁切。 */
+    transition: opacity 180ms ease, visibility 180ms; /* 屬性變更時的過渡動畫。 */
+}
+
+/* 展開時顯示子模式區，稍微延後淡入。 */
+.is-expanded .SubModePanel {
+    opacity: 1; /* 透明度，0 為完全透明、1 為不透明。 */
+    visibility: visible; /* 是否顯示並接受互動，同時保留布局位置。 */
+    transition-delay: 150ms; /* 過渡動畫開始前的等待時間。 */
+}
+
+/* 子模式區上方的小字模式名稱。 */
+.SubModeLabel {
+    font-size: 0.75rem; /* 字級；clamp 限制響應式字體的最小及最大尺寸。 */
+    color: var(--color-muted); /* 文字或繼承的前景色。 */
+    letter-spacing: 0.1em; /* 字元間距。 */
+}
+
+/* 子模式選擇區的標題。 */
+.SubModePanel h2 {
+    font-size: clamp(1rem, 1.6vw, 1.4rem); /* 字級；clamp 限制響應式字體的最小及最大尺寸。 */
+    margin-block: 0.5rem 1.2rem; /* 上下外距。 */
+}
+
+/* 子模式按鈕的垂直列表。 */
+.SubModeOptions {
+    display: grid; /* 指定區塊、flex、grid 或隱藏布局。 */
+    gap: 0.65rem; /* 子元素之間的間距。 */
+}
+
+/* 子模式按鈕，名稱與 Play／Coming soon 提示並排。 */
+.SubModeButton {
+    display: flex; /* 指定區塊、flex、grid 或隱藏布局。 */
+    flex-wrap: wrap; /* 內容不足一行時是否換行。 */
+    align-items: center; /* 子元素在交叉軸的對齊方式。 */
+    justify-content: space-between; /* 子元素在主軸的排列與對齊。 */
+    gap: 0.3rem; /* 子元素之間的間距。 */
+    padding: 0.85rem 0.75rem; /* 內容與容器邊界間的內距。 */
+    border: 1px solid #777; /* 邊框寬度、樣式及顏色。 */
+    border-radius: 0.2rem; /* 圓角；50% 可形成圓形游標。 */
+    background: #242424; /* 背景色或背景設定。 */
+    color: var(--color-text); /* 文字或繼承的前景色。 */
+    text-align: left; /* 文字水平對齊。 */
+    cursor: pointer; /* 滑鼠游標樣式。 */
+}
+
+/* 子模式可用狀態的小字。 */
+.SubModeButton small {
+    color: var(--color-muted); /* 文字或繼承的前景色。 */
+    font-size: 0.65rem; /* 字級；clamp 限制響應式字體的最小及最大尺寸。 */
+}
+
+/* 已開放子模式的滑鼠懸停效果。 */
+.SubModeButton:hover:not(:disabled) {
+    background: #535353; /* 背景色或背景設定。 */
+    border-color: white; /* 邊框顏色。 */
+}
+
+/* 尚未實作的子模式以較低透明度顯示。 */
+.SubModeButton:disabled {
+    opacity: 0.45; /* 透明度，0 為完全透明、1 為不透明。 */
+    cursor: default; /* 滑鼠游標樣式。 */
+}
+
+/* 窄螢幕斷點：調整卡片比例、控制區或工具列方向。 */
+@media (max-width: 40rem) {
+    /* 整個模式選單及可調參數，垂直分成標題、卡片列表與操作提示。 */
+    .ModeMenu {
+        --card-width: 4.5rem; /* 收合卡片寬度，也就是模式選擇區寬度。 */
+        --panel-width: clamp(11rem, 58vw, 17rem); /* 展開後額外增加的子模式區寬度。 */
+        --card-slant: 1rem; /* 平行四邊形上下角的水平偏移量。 */
+    }
+
+    /* 小螢幕上的標題左右留白。 */
+    .MenuHeader {
+        padding-inline: 1rem; /* 左右兩側內距。 */
+    }
+
+}
+
+/* 低高度或橫向螢幕斷點：縮小留白並隱藏次要文字。 */
+@media (max-height: 32rem) {
+    /* 整個模式選單及可調參數，垂直分成標題、卡片列表與操作提示。 */
+    .ModeMenu {
+        padding-top: 0.5rem; /* 上方內距。 */
+        gap: 0.5rem; /* 子元素之間的間距。 */
+    }
+
+    /* 模式選單主標題的響應式字級。 */
+    .MenuHeader h1 {
+        font-size: 1.2rem; /* 字級；clamp 限制響應式字體的最小及最大尺寸。 */
+    }
+
+    /* 高度較小時隱藏次要說明，將空間留給卡片。 */
+    .MenuHeader > p:not(.MenuEyebrow), .MenuEyebrow, .MenuFooter {
+        display: none; /* 指定區塊、flex、grid 或隱藏布局。 */
+    }
+
+    /* 旋轉的模式名稱，保留原本接近垂直的文字風格。 */
+    .ModeTitle {
+        font-size: 0.9rem; /* 字級；clamp 限制響應式字體的最小及最大尺寸。 */
+    }
+
+    /* 卡片上方的模式序號。 */
+    .ModeNumber {
+        top: 0.5rem; /* 距離定位參照上緣的位置。 */
+    }
+
+    /* 卡片下方展開或收合的加減號。 */
+    .ModeToggle {
+        bottom: 0.5rem; /* 距離定位參照下緣的位置。 */
+    }
+
+    /* 卡片右半部的子模式區，收合時不可見且不能操作。 */
+    .SubModePanel {
+        justify-content: flex-start; /* 子元素在主軸的排列與對齊。 */
+    }
+
+}
+
+/* 尊重系統減少動態效果設定，停用閃爍或位移動畫。 */
+@media (prefers-reduced-motion: reduce) {
+    /* 減少動態效果設定下，停用卡片展開與淡入動畫。 */
+    .ModeCard, .SubModePanel {
+        transition: none; /* 屬性變更時的過渡動畫。 */
+    }
+
+}

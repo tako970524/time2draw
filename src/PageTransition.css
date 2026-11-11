@@ -1,0 +1,107 @@
+/* PageTransition.css：通用頁面切換動畫；在這裡修改遮罩排版、AE 素材尺寸與預設載入動畫。 */
+
+/* 在這裡修改動畫素材排版或預設載入動畫。 */
+/* 動畫包裝層及頁面內容填滿父層，避免影響原頁面尺寸。 */
+.PageTransition, .PageTransitionPage {
+    width: 100%;
+    height: 100%;
+}
+
+/* 全畫面載入遮罩，高於繪圖游標，播放後淡出。 */
+.PageTransitionOverlay {
+    position: fixed; /* 定位模式；relative 作為參照、absolute 疊圖、fixed 固定於視窗。 */
+    inset: 0; /* 同時設定上下左右定位距離。 */
+    z-index: 2000; /* 疊放順序，數值越大越靠前。 */
+    display: grid; /* 指定區塊、flex、grid 或隱藏布局。 */
+    place-items: center; /* 同時設定 grid 的水平與垂直對齊。 */
+    background: var(--color-background); /* 背景色或背景設定。 */
+    animation: pageTransitionReveal var(--transition-duration) ease forwards; /* 動畫名稱、時間、速度及重複／結束行為。 */
+}
+
+/* 遮罩內素材與 Loading 文字的排版，可在此修改構圖。 */
+.PageTransitionContent {
+    display: grid; /* 指定區塊、flex、grid 或隱藏布局。 */
+    justify-items: center; /* grid 子元素的水平對齊。 */
+    gap: 1.5rem; /* 子元素之間的間距。 */
+    padding: var(--page-gutter); /* 內容與容器邊界間的內距。 */
+}
+
+/* 載入文字的字級、字距及顏色。 */
+.PageTransitionContent p {
+    font-size: 0.85rem; /* 字級；clamp 限制響應式字體的最小及最大尺寸。 */
+    letter-spacing: 0.25em; /* 字元間距。 */
+    color: var(--color-muted); /* 文字或繼承的前景色。 */
+}
+
+/* AE 匯出影片或動圖的顯示尺寸與等比例縮放。 */
+.PageTransitionMedia {
+    display: block; /* 指定區塊、flex、grid 或隱藏布局。 */
+    width: min(70vw, 32rem); /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+    max-height: 65dvh; /* 限制最高顯示高度。 */
+    object-fit: contain; /* 素材如何填入顯示範圍，contain 保留完整畫面。 */
+}
+
+/* 預設三條斜柱載入動畫的排列。 */
+.PageTransitionLoader {
+    display: flex; /* 指定區塊、flex、grid 或隱藏布局。 */
+    gap: 0.5rem; /* 子元素之間的間距。 */
+}
+
+/* 預設載入斜柱；可調整大小、傾斜或動畫節奏。 */
+.PageTransitionLoader i {
+    width: 0.85rem; /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+    height: 3rem; /* 顯示高度；dvh 會隨行動瀏覽器可視高度變動。 */
+    background: #ddd; /* 背景色或背景設定。 */
+    transform: skewX(-12deg); /* 平移、旋轉、傾斜或縮放，不改變資料座標。 */
+    animation: loaderPulse 600ms ease-in-out infinite alternate; /* 動畫名稱、時間、速度及重複／結束行為。 */
+}
+
+/* 第二條斜柱延後開始，形成錯開的節奏。 */
+.PageTransitionLoader i:nth-child(2) {
+    animation-delay: 100ms; /* 動畫延後開始的時間。 */
+}
+
+/* 第三條斜柱再次延後。 */
+.PageTransitionLoader i:nth-child(3) {
+    animation-delay: 200ms; /* 動畫延後開始的時間。 */
+}
+
+/* 載入斜柱的透明度與高度脈動。 */
+@keyframes loaderPulse {
+    /* 動畫此時間點的樣式；百分比以整段動畫時間為基準。 */
+    from {
+        opacity: 0.2; /* 透明度，0 為完全透明、1 為不透明。 */
+        transform: skewX(-12deg) scaleY(0.6); /* 平移、旋轉、傾斜或縮放，不改變資料座標。 */
+    }
+
+    /* 動畫此時間點的樣式；百分比以整段動畫時間為基準。 */
+    to {
+        opacity: 0.9; /* 透明度，0 為完全透明、1 為不透明。 */
+        transform: skewX(-12deg) scaleY(1); /* 平移、旋轉、傾斜或縮放，不改變資料座標。 */
+    }
+
+}
+
+/* 前段遮住頁面，後段淡出；結束後觸發 JSX 的動畫完成回呼。 */
+@keyframes pageTransitionReveal {
+    /* 動畫此時間點的樣式；百分比以整段動畫時間為基準。 */
+    0%, 55% {
+        opacity: 1; /* 透明度，0 為完全透明、1 為不透明。 */
+    }
+
+    /* 動畫此時間點的樣式；百分比以整段動畫時間為基準。 */
+    100% {
+        opacity: 0; /* 透明度，0 為完全透明、1 為不透明。 */
+        visibility: hidden; /* 是否顯示並接受互動，同時保留布局位置。 */
+    }
+
+}
+
+/* 尊重系統減少動態效果設定，停用閃爍或位移動畫。 */
+@media (prefers-reduced-motion: reduce) {
+    /* 預設載入斜柱；可調整大小、傾斜或動畫節奏。 */
+    .PageTransitionLoader i {
+        animation: none; /* 動畫名稱、時間、速度及重複／結束行為。 */
+    }
+
+}

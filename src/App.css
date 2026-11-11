@@ -1,0 +1,244 @@
+/* App.css：全域樣式與共用工具列／游標；:root 的變數可統一修改顏色、頁面留白與工具大小。 */
+
+/* 全域設計變數與預設文字樣式，各頁面透過 var() 共用。 */
+:root {
+    --color-background: #181818; /* 全域頁面背景色。 */
+    --color-surface: #292929; /* 卡片及區塊背景色。 */
+    --color-text: #fff; /* 主要文字色。 */
+    --color-muted: #aaa; /* 次要說明文字色。 */
+    --page-gutter: clamp(1rem, 4vw, 5rem); /* 頁面左右留白，隨視窗縮放且限制最大最小值。 */
+    --toolbar-size: 2.75rem; /* 工具按鈕邊長及桌面工具列寬度。 */
+    font-family: Arial, "Microsoft JhengHei", sans-serif; /* 指定字體及後備字體。 */
+    color: var(--color-text); /* 文字或繼承的前景色。 */
+    background: var(--color-background); /* 背景色或背景設定。 */
+}
+
+/* 清除瀏覽器預設間距，尺寸計算包含邊框及內距。 */
+* {
+    padding: 0; /* 內容與容器邊界間的內距。 */
+    margin: 0; /* 元素外側留白。 */
+    box-sizing: border-box; /* 讓宣告尺寸包含內距與邊框。 */
+}
+
+/* 頁面背景與溢位設定，捲動交由內部工作區處理。 */
+body {
+    overflow: hidden; /* 超出容器範圍的內容如何處理。 */
+    background-color: #585757; /* 背景顏色。 */
+    color: white; /* 文字或繼承的前景色。 */
+    display: block; /* 指定區塊、flex、grid 或隱藏布局。 */
+}
+
+/* 讓 HTML、React 根節點與應用程式填滿視窗。 */
+html, body, #root, .App {
+    width: 100%; /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+    height: 100%; /* 顯示高度；dvh 會隨行動瀏覽器可視高度變動。 */
+    min-width: 0; /* 最小寬度；0 可防止內容把 flex 區塊撐寬。 */
+}
+
+/* 按鈕沿用所在頁面的字體。 */
+button {
+    font: inherit; /* 文字樣式，inherit 表示沿用父層。 */
+}
+
+/* 鍵盤操作時的焦點外框，方便辨識目前選中的按鈕。 */
+button:focus-visible, [role="button"]:focus-visible {
+    outline: 2px solid #b8d7ff; /* 不改變布局的鍵盤焦點外框。 */
+    outline-offset: 3px; /* 焦點外框與邊界的距離。 */
+}
+
+/* 共用工具列；桌面垂直排列，手機在下方媒體查詢改為橫向。 */
+.ToolBar {
+    width: var(--toolbar-size); /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+    flex: 0 0 var(--toolbar-size); /* 伸展、縮小與初始尺寸的設定。 */
+    align-self: stretch; /* 此元素在 flex 交叉軸的對齊方式。 */
+    display: flex; /* 指定區塊、flex、grid 或隱藏布局。 */
+    flex-direction: column; /* 排列方向，row 為橫向、column 為直向。 */
+    background-color: #323232; /* 背景顏色。 */
+    color: white; /* 文字或繼承的前景色。 */
+}
+
+/* 畫布共用設定；停用觸控捲動與文字選取，避免干擾繪圖。 */
+.Canvas {
+    background-color: white; /* 背景顏色。 */
+    touch-action: none; /* 觸控手勢行為，none 避免繪圖時捲動頁面。 */
+    overscroll-behavior: none; /* 捲動到邊界時是否繼續影響外層。 */
+    user-select: none; /* 是否允許選取文字。 */
+    -webkit-user-select: none; /* WebKit 瀏覽器的文字選取設定。 */
+    cursor: default; /* 滑鼠游標樣式。 */
+}
+
+/* 可重用的 flex 排列工具類別。 */
+.flex {
+    display: flex; /* 指定區塊、flex、grid 或隱藏布局。 */
+}
+
+/* 三種工具按鈕的共同尺寸、置中及可點擊樣式。 */
+.BrushTool,
+.EraserTool,
+.CursorTool,
+.RotateTool,
+.HandTool,
+.ZoomTool {
+    width: var(--toolbar-size); /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+    height: var(--toolbar-size); /* 顯示高度；dvh 會隨行動瀏覽器可視高度變動。 */
+    flex: 0 0 var(--toolbar-size); /* 伸展、縮小與初始尺寸的設定。 */
+    border: 0; /* 邊框寬度、樣式及顏色。 */
+    padding: 0; /* 內容與容器邊界間的內距。 */
+    background: transparent; /* 背景色或背景設定。 */
+    display: flex; /* 指定區塊、flex、grid 或隱藏布局。 */
+    justify-content: center; /* 子元素在主軸的排列與對齊。 */
+    align-items: center; /* 子元素在交叉軸的對齊方式。 */
+    cursor: pointer; /* 滑鼠游標樣式。 */
+}
+
+/* 工具圖示尺寸，與按鈕點擊範圍分開設定。 */
+.BrushTool img,
+.EraserTool img,
+.CursorTool img,
+.RotateTool img,
+.HandTool img,
+.ZoomTool img {
+    width: 1.25rem; /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+    height: 1.25rem; /* 顯示高度；dvh 會隨行動瀏覽器可視高度變動。 */
+}
+
+/* 目前選中工具的背景顏色。 */
+.BrushTool.active,
+.EraserTool.active,
+.CursorTool.active,
+.RotateTool.active,
+.HandTool.active,
+.ZoomTool.active {
+    background-color: #555; /* 背景顏色。 */
+}
+
+/* 自訂游標固定於螢幕座標，不攔截畫布的指標事件。 */
+.DrawingCursor {
+    position: fixed; /* 定位模式；relative 作為參照、absolute 疊圖、fixed 固定於視窗。 */
+    pointer-events: none; /* 是否攔截指標事件，none 讓事件傳到下方畫布。 */
+    transform: translate(-50%, -50%); /* 平移、旋轉、傾斜或縮放，不改變資料座標。 */
+    z-index: 1000; /* 疊放順序，數值越大越靠前。 */
+}
+
+/* 大筆刷：圓形 */
+/* 橡皮擦等較大工具使用的圓形游標。 */
+.DrawingCursor.circle {
+    border: 1px solid black; /* 邊框寬度、樣式及顏色。 */
+    border-radius: 50%; /* 圓角；50% 可形成圓形游標。 */
+}
+
+/* 小筆刷：十字 */
+/* 細筆刷使用的十字游標尺寸。 */
+.DrawingCursor.cross {
+    width: 15px; /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+    height: 15px; /* 顯示高度；dvh 會隨行動瀏覽器可視高度變動。 */
+}
+
+/* 以兩個偽元素組成十字，交點對齊指標中心。 */
+.DrawingCursor.cross::before,
+.DrawingCursor.cross::after {
+    content: ""; /* 偽元素產生的內容，空字串可用來畫十字線。 */
+    position: absolute; /* 定位模式；relative 作為參照、absolute 疊圖、fixed 固定於視窗。 */
+    left: 50%; /* 距離定位參照左緣的位置。 */
+    top: 50%; /* 距離定位參照上緣的位置。 */
+    background-color: black; /* 背景顏色。 */
+    transform: translate(-50%, -50%); /* 平移、旋轉、傾斜或縮放，不改變資料座標。 */
+}
+
+/* 橫線 */
+/* 十字游標的橫線。 */
+.DrawingCursor.cross::before {
+    width: 15px; /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+    height: 1px; /* 顯示高度；dvh 會隨行動瀏覽器可視高度變動。 */
+}
+
+/* 直線 */
+/* 十字游標的直線。 */
+.DrawingCursor.cross::after {
+    width: 1px; /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+    height: 15px; /* 顯示高度；dvh 會隨行動瀏覽器可視高度變動。 */
+}
+
+/* Sketch 遊戲頁，工具列與工作區並排填滿視窗。 */
+.Game {
+    width: 100%; /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+    height: 100dvh; /* 顯示高度；dvh 會隨行動瀏覽器可視高度變動。 */
+    display: flex; /* 指定區塊、flex、grid 或隱藏布局。 */
+    background-color: #585757; /* 背景顏色。 */
+}
+
+/* 畫布的共用外層；遊戲內的具體大小由 BoxMode.css 覆寫。 */
+.CanvasContainer {
+    display: flex; /* 指定區塊、flex、grid 或隱藏布局。 */
+}
+
+/* 窄螢幕斷點：調整卡片比例、控制區或工具列方向。 */
+@media (max-width: 40rem) {
+    /* 共用工具列；桌面垂直排列，手機在下方媒體查詢改為橫向。 */
+    .ToolBar {
+        width: 100%; /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+        flex-direction: row; /* 排列方向，row 為橫向、column 為直向。 */
+    }
+
+}
+
+/* Rotate content layers while keeping the cursor in screen coordinates. */
+.CanvasLayers {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-origin: center;
+}
+.DrawingViewport {
+    overflow: hidden;
+}
+
+.RotationControls {
+    position: absolute;
+    top: 0.5rem;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+}
+
+.RotationControls label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.RotationControls button,
+.RotationControls input {
+    min-height: 2rem;
+    border: 1px solid #777;
+    border-radius: 0.3rem;
+    background: #323232;
+    color: white;
+    padding: 0.25rem 0.6rem;
+    font: inherit;
+}
+
+.RotationControls button {
+    cursor: pointer;
+}
+
+.RotationControls input {
+    width: 5.5rem;
+    text-align: right;
+}
+
+.RotationControls input:focus-visible {
+    outline: 2px solid #b8d7ff;
+    outline-offset: 2px;
+}
+
+.ZoomValue {
+    min-width: 3.25rem;
+    font-variant-numeric: tabular-nums;
+    color: #ddd;
+}

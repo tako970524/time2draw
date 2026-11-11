@@ -1,0 +1,115 @@
+.StartScreen {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    padding: var(--page-gutter);
+    background-image: linear-gradient(60deg, #29323c 0%, #59738e 100%);
+    color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.StartScreen:focus-visible {
+    outline-offset: -4px;
+}
+
+.StartContent {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+    max-width: 100%;
+    text-align: center;
+}
+
+.GameTitle {
+    font-size: clamp(2rem, 12vw, 10rem);
+    line-height: 1.1;
+    letter-spacing: 0.08em;
+    margin-bottom: clamp(1.5rem, 9dvh, 5rem);
+    text-shadow:
+        0 0 10px rgb(255 255 255 / 55%),
+        0 0 10px rgb(225 237 255 / 35%),
+        0 0 10px rgb(192 215 255 / 20%);
+}
+
+.TouchToStart {
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
+    line-height: 1.5;
+    letter-spacing: 0.25em;
+    text-shadow: 0 0 10px rgb(255 255 255 / 60%), 0 0 10px rgb(225 237 255 / 35%);
+    animation: touchBlink 2s ease-in-out infinite;
+}
+
+@keyframes touchBlink {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+.StartParticles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.StartParticle {
+    position: absolute;
+    left: var(--particle-x);
+    top: var(--particle-y);
+    width: var(--particle-size);
+    height: var(--particle-size);
+    border-radius: 0;
+    background: #bbd1bf;
+    box-shadow: 0 0 6px rgb(225 237 255 / 55%);
+    opacity: 0;
+    animation: startParticleLife var(--particle-lifetime) linear var(--particle-delay) infinite;
+}
+
+/* 出生時短暫淡入，之後透明度隨剩餘生命線性降低，歸零後才重生。 */
+@keyframes startParticleLife {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 0, 0);
+    }
+    10% { opacity: var(--particle-opacity); }
+    100% {
+        opacity: 0;
+        transform: translate3d(var(--particle-drift), clamp(-50rem, -80vh, -40rem), 0);
+    }
+}
+
+/* 依螢幕空間控制密度；窄螢幕及橫向手機減少粒子數。 */
+@media (max-width: 2399px) {
+    .StartParticle:nth-child(n + 141) { display: none; }
+}
+
+@media (max-width: 1023px) {
+    .StartParticle:nth-child(n + 91) { display: none; }
+}
+
+@media (max-width: 600px), (max-height: 500px) {
+    .StartParticle:nth-child(n + 57) { display: none; }
+}
+
+@media (max-height: 500px) {
+    .GameTitle { font-size: clamp(2rem, min(12vw, 25dvh), 10rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .StartParticle {
+        animation: none;
+        opacity: var(--particle-opacity);
+    }
+
+    .TouchToStart {
+        animation: none;
+        opacity: 0.8;
+    }
+}
+

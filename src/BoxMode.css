@@ -1,0 +1,234 @@
+/* BoxMode.css：Boxes 與 Sketch 遊戲版面；畫布依可用區域等比例縮放，保留內部 1000 × 1000 座標。 */
+
+/* Boxes Normal 全頁容器，桌面工具列與工作區並排。 */
+.BoxModeNormal {
+    display: flex; /* 指定區塊、flex、grid 或隱藏布局。 */
+    width: 100%; /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+    height: 100dvh; /* 顯示高度；dvh 會隨行動瀏覽器可視高度變動。 */
+    background-color: #585757; /* 背景顏色。 */
+}
+
+/* 共用答題頁：上方進度、中間畫布、下方成績與操作，保留 Sketch 的原本樣式。 */
+.BoxGame {
+    background: #222526; /* 畫布四周的中性深色背景。 */
+}
+.BoxGame .BoxModeWorkspace {
+    overflow: hidden; /* 畫布縮到可用空間，避免答題按鈕被捲到畫面外。 */
+}
+.BoxGameHeader {
+    display: flex; /* 標題與完成進度並排。 */
+    flex: 0 0 auto; /* 保留標題高度，其餘交給畫布。 */
+    justify-content: space-between; /* 進度置於右側。 */
+    align-items: center; /* 垂直對齊。 */
+    gap: 1rem; /* 左右區塊留白。 */
+    padding: 0.85rem clamp(0.75rem, 2vw, 2rem); /* 響應式內距。 */
+    background: #1c1f20; /* 標題區底色。 */
+    border-bottom: 1px solid #393d3e; /* 區分畫布區。 */
+}
+.BoxGameHeading {
+    display: flex; /* 退出與模式標題並排。 */
+    align-items: center; /* 垂直置中。 */
+    gap: 1rem; /* 按鈕與標題間距。 */
+}
+.BoxModeLabel {
+    font-size: 0.65rem; /* 模式標籤字級。 */
+    letter-spacing: 0.16em; /* 以字距區分標籤。 */
+    color: #b4bfbc; /* 次要文字色。 */
+    margin-bottom: 0.3rem; /* 與題號的距離。 */
+}
+.BoxGameHeading h1 {
+    font-size: clamp(1.05rem, 2vw, 1.45rem); /* 題號響應式字級。 */
+}
+.BoxGameHeading h1 small {
+    color: #a3acaa; /* 總題數較淡。 */
+    font-size: 0.7em; /* 與目前題號區分。 */
+    font-weight: normal; /* 不強調總題數。 */
+}
+.BoxExitButton, .BoxPrimaryButton {
+    min-height: 2.75rem; /* 保留適合觸控的高度。 */
+    border-radius: 0.4rem; /* 按鈕圓角。 */
+    cursor: pointer; /* 可點擊游標。 */
+    padding: 0.55rem 1rem; /* 按鈕內距。 */
+}
+.BoxExitButton {
+    color: #d6ddda; /* 退出文字顏色。 */
+    border: 1px solid #59615e; /* 較低強度的次要操作。 */
+    background: transparent; /* 保留標題背景。 */
+}
+.BoxSessionProgress {
+    display: grid; /* 完成數與進度條上下排列。 */
+    gap: 0.45rem; /* 行間距。 */
+    width: clamp(8rem, 22vw, 15rem); /* 進度區隨視窗縮放。 */
+    color: #b4bfbc; /* 完成數顏色。 */
+    font-size: 0.75rem; /* 進度字級。 */
+}
+.BoxSessionProgress progress {
+    width: 100%; /* 填滿進度區。 */
+    height: 0.35rem; /* 細進度條。 */
+    border: 0; /* 移除瀏覽器預設邊框。 */
+    border-radius: 1rem; /* 進度條圓角。 */
+    overflow: hidden; /* 裁切圓角內的色條。 */
+    background: #414846; /* 未完成底色。 */
+    accent-color: #8cd1b4; /* 支援原生進度元件的瀏覽器顏色。 */
+}
+.BoxSessionProgress progress::-webkit-progress-bar { background: #414846; } /* Chromium 進度條底色。 */
+.BoxSessionProgress progress::-webkit-progress-value { background: #8cd1b4; } /* Chromium 完成進度色。 */
+.BoxSessionProgress progress::-moz-progress-bar { background: #8cd1b4; } /* Firefox 完成進度色。 */
+.BoxAnswerBar {
+    flex: 0 0 auto; /* 成績操作區保持可見。 */
+    display: flex; /* 成績與主要按鈕並排。 */
+    align-items: center; /* 垂直置中。 */
+    justify-content: space-between; /* 主要操作靠右。 */
+    gap: 1rem; /* 留出操作間距。 */
+    padding: 0.8rem clamp(0.75rem, 2vw, 2rem); /* 響應式內距。 */
+    padding-bottom: max(0.8rem, env(safe-area-inset-bottom)); /* 避開手機下方系統操作區。 */
+    border-top: 1px solid #393d3e; /* 畫布與成績區分界。 */
+    background: #1c1f20; /* 與標題區一致的底色。 */
+}
+.BoxFeedback {
+    display: flex; /* 分數與評分細項並排。 */
+    align-items: center; /* 垂直置中。 */
+    flex-wrap: wrap; /* 小螢幕可換行。 */
+    gap: 0.4rem 1rem; /* 評分區塊間距。 */
+    font-size: clamp(0.75rem, 1.2vw, 0.9rem); /* 響應式文字。 */
+}
+.BoxQuestionScore { font-size: 1.7rem; color: #a3e0c5; } /* 單題分數使用醒目綠色。 */
+.BoxQuestionScore small { font-size: 0.7rem; color: #a3acaa; font-weight: normal; } /* 滿分標記。 */
+.BoxHint { color: #9eaaa5; font-size: 0.7rem; margin-top: 0.25rem; } /* 繪圖及答案提示。 */
+.BoxPrimaryButton {
+    flex: 0 0 auto; /* 避免文字區壓縮按鈕。 */
+    min-width: 6.5rem; /* 送出與繼續維持穩定寬度。 */
+    border: 0; /* 移除預設邊框。 */
+    color: #12271e; /* 高對比按鈕文字。 */
+    background: #a3e0c5; /* 強調主要操作。 */
+    font-weight: bold; /* 強調送出／繼續。 */
+}
+.BoxPrimaryButton:disabled { opacity: 0.45; cursor: default; } /* 題目尚未產生時停用。 */
+.BoxPrimaryButton:hover:not(:disabled) { background: #c0efd9; } /* 主要操作懸停。 */
+@media (max-width: 40rem) {
+    .BoxGameHeader { gap: 0.6rem; padding-block: 0.6rem; } /* 手機標題減少留白。 */
+    .BoxGameHeading { gap: 0.6rem; } /* 縮短標題與退出距離。 */
+    .BoxSessionProgress { width: 7.5rem; font-size: 0.65rem; } /* 保持手機題號與進度並排。 */
+    .BoxAnswerBar { gap: 0.5rem; padding-top: 0.6rem; padding-bottom: max(0.6rem, env(safe-area-inset-bottom)); } /* 手機操作區。 */
+    .BoxQuestionScore { font-size: 1.3rem; } /* 分數避免壓縮畫布。 */
+    .BoxFeedback { gap: 0.2rem 0.6rem; } /* 縮小評分細項間距。 */
+    .BoxFeedback .BoxHint { display: none; } /* 送出後保留分數與細項，減少次要提示。 */
+}
+
+/* 遊戲工作區，以垂直排列分配控制區及剩餘繪圖空間。 */
+.BoxModeWorkspace, .SketchWorkspace {
+    flex: 1; /* 伸展、縮小與初始尺寸的設定。 */
+    min-width: 0; /* 最小寬度；0 可防止內容把 flex 區塊撐寬。 */
+    min-height: 0; /* 最小高度；0 允許工作區縮小，按鈕則保留觸控範圍。 */
+    display: flex; /* 指定區塊、flex、grid 或隱藏布局。 */
+    flex-direction: column; /* 排列方向，row 為橫向、column 為直向。 */
+    overflow: auto; /* 超出容器範圍的內容如何處理。 */
+}
+
+/* 遊戲上方控制區，內容不足一行時自動換行。 */
+.BoxModeControls, .WorkspaceHeader {
+    flex: 0 0 auto; /* 伸展、縮小與初始尺寸的設定。 */
+    display: flex; /* 指定區塊、flex、grid 或隱藏布局。 */
+    flex-wrap: wrap; /* 內容不足一行時是否換行。 */
+    align-items: center; /* 子元素在交叉軸的對齊方式。 */
+    gap: 0.75rem; /* 子元素之間的間距。 */
+    padding: 0.75rem 1rem; /* 內容與容器邊界間的內距。 */
+    background: #323232; /* 背景色或背景設定。 */
+    color: white; /* 文字或繼承的前景色。 */
+    font-size: clamp(0.8rem, 1.1vw, 1rem); /* 字級；clamp 限制響應式字體的最小及最大尺寸。 */
+}
+
+/* 送出、繼續及返回按鈕的共同尺寸與外觀。 */
+.BoxModeControls button, .WorkspaceHeader button {
+    padding: 0.5rem 1.1rem; /* 內容與容器邊界間的內距。 */
+    min-height: 2.75rem; /* 最小高度；0 允許工作區縮小，按鈕則保留觸控範圍。 */
+    cursor: pointer; /* 滑鼠游標樣式。 */
+    border-radius: 0.375rem; /* 圓角；50% 可形成圓形游標。 */
+    border: 0; /* 邊框寬度、樣式及顏色。 */
+    font-size: 1rem; /* 字級；clamp 限制響應式字體的最小及最大尺寸。 */
+}
+
+/* 剩餘空間中的繪圖視口，同時提供 cqw／cqh 尺寸基準。 */
+.DrawingViewport {
+    position: relative;
+    flex: 1; /* 伸展、縮小與初始尺寸的設定。 */
+    min-width: 0; /* 最小寬度；0 可防止內容把 flex 區塊撐寬。 */
+    min-height: 0; /* 最小高度；0 允許工作區縮小，按鈕則保留觸控範圍。 */
+    display: grid; /* 指定區塊、flex、grid 或隱藏布局。 */
+    place-items: center; /* 同時設定 grid 的水平與垂直對齊。 */
+    padding: 3.5rem clamp(0.25rem, 1vw, 1rem) 0.25rem;
+    container-type: size; /* 建立尺寸查詢容器，提供 cqw／cqh 的參照。 */
+}
+
+/* 內部座標保留 1000 × 1000，只調整 CSS 顯示尺寸。 */
+/* 以視口寬高的較小值建立正方形畫布，題目與筆跡共用此尺寸。 */
+.DrawingViewport .CanvasContainer {
+    position: relative; /* 定位模式；relative 作為參照、absolute 疊圖、fixed 固定於視窗。 */
+    display: block; /* 指定區塊、flex、grid 或隱藏布局。 */
+    width: min(100cqw, calc(100cqh - 3.75rem));
+    height: auto; /* 顯示高度；dvh 會隨行動瀏覽器可視高度變動。 */
+    aspect-ratio: 1; /* 維持顯示長寬比例，1 表示正方形。 */
+    isolation: isolate; /* 建立獨立疊放環境以固定題目及筆跡層順序。 */
+}
+
+/* 玩家筆跡 canvas 完全填滿正方形容器。 */
+.DrawingViewport .Canvas {
+    display: block; /* 指定區塊、flex、grid 或隱藏布局。 */
+    width: 100%; /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+    height: 100%; /* 顯示高度；dvh 會隨行動瀏覽器可視高度變動。 */
+}
+
+/* 題目與答案圖層固定於筆跡下方，不攔截指標事件。 */
+.BoxModeReference {
+    position: absolute; /* 定位模式；relative 作為參照、absolute 疊圖、fixed 固定於視窗。 */
+    inset: 0; /* 同時設定上下左右定位距離。 */
+    z-index: 0; /* 疊放順序，數值越大越靠前。 */
+    pointer-events: none; /* 是否攔截指標事件，none 讓事件傳到下方畫布。 */
+}
+
+/* 參考 canvas 與玩家筆跡使用相同顯示尺寸。 */
+.BoxModeReference canvas {
+    display: block; /* 指定區塊、flex、grid 或隱藏布局。 */
+    width: 100%; /* 顯示寬度，不改變 canvas 內部資料解析度。 */
+    height: 100%; /* 顯示高度；dvh 會隨行動瀏覽器可視高度變動。 */
+}
+
+.CircleReference {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.CanvasOverlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* 玩家筆跡層背景透明，橡皮擦不會刪掉下方題目。 */
+.BoxModeNormal .Canvas {
+    position: relative; /* 定位模式；relative 作為參照、absolute 疊圖、fixed 固定於視窗。 */
+    z-index: 1; /* 疊放順序，數值越大越靠前。 */
+    background-color: transparent; /* 背景顏色。 */
+}
+
+/* 窄螢幕斷點：調整卡片比例、控制區或工具列方向。 */
+@media (max-width: 40rem) {
+    /* 窄螢幕改成垂直布局，上方為橫向工具列。 */
+    .BoxModeNormal, .Game {
+        flex-direction: column; /* 排列方向，row 為橫向、column 為直向。 */
+    }
+
+    /* 遊戲上方控制區，內容不足一行時自動換行。 */
+    .BoxModeControls, .WorkspaceHeader {
+        padding: 0.5rem; /* 內容與容器邊界間的內距。 */
+        gap: 0.4rem; /* 子元素之間的間距。 */
+    }
+
+    /* 窄螢幕題號及說明文字獨占一行。 */
+    .BoxModeControls > span {
+        flex-basis: 100%; /* flex 主軸的初始尺寸，卡片展開時用它推動後方卡片。 */
+    }
+
+}

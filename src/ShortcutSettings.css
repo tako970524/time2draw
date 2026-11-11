@@ -1,0 +1,154 @@
+/* 主選單入口與獨立捲動的快捷鍵設定視窗。 */
+.MenuHeader.MenuHeaderWithSettings {
+    position: relative;
+    padding-right: calc(var(--page-gutter) + 11rem);
+}
+
+.ShortcutSettings {
+    position: absolute;
+    top: 0;
+    right: var(--page-gutter);
+    max-width: 10rem;
+}
+
+.ShortcutSettingsButton, .ShortcutDialog button {
+    min-height: 2.75rem;
+    padding: 0.65rem 1rem;
+    border: 1px solid #666;
+    border-radius: 0.35rem;
+    background: #292929;
+    color: var(--color-text);
+    cursor: pointer;
+}
+
+.ShortcutSettingsButton:hover, .ShortcutDialog button:hover {
+    background: #404040;
+    border-color: #aaa;
+}
+
+.MenuHeader .ShortcutSaveStatus {
+    max-width: 18rem;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.ShortcutDialog {
+    width: min(30rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    margin: auto;
+    padding: clamp(1rem, 4vw, 1.75rem);
+    overflow-y: auto;
+    border: 1px solid #606060;
+    border-radius: 0.75rem;
+    background: #222;
+    color: var(--color-text);
+    box-shadow: 0 1rem 4rem #0008;
+}
+
+.ShortcutDialog::backdrop {
+    background: #000b;
+}
+
+.ShortcutDialogHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.MenuHeader .ShortcutEyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.4rem;
+}
+
+.ShortcutDialog h2 {
+    font-size: 1.4rem;
+}
+
+.ShortcutDialog .ShortcutClose {
+    padding: 0.3rem 0.8rem;
+    font-size: 1.5rem;
+    background: transparent;
+}
+
+.MenuHeader .ShortcutDescription {
+    margin-block: 1rem 1.5rem;
+    font-size: 0.85rem;
+    line-height: 1.7;
+}
+
+.ShortcutFields {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.ShortcutField {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.4rem;
+    background: #303030;
+}
+
+.ShortcutField input {
+    width: 3.25rem;
+    height: 2.75rem;
+    border: 1px solid #777;
+    border-radius: 0.3rem;
+    background: #181818;
+    color: white;
+    font: 600 1.15rem monospace;
+    text-align: center;
+}
+
+.ShortcutField input:focus-visible {
+    outline: 2px solid #b8d7ff;
+    outline-offset: 3px;
+}
+
+.MenuHeader .ShortcutError {
+    min-height: 2.5rem;
+    padding-block: 0.65rem;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: #ffb8b8;
+}
+
+.ShortcutActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.ShortcutDialog .ShortcutReset {
+    margin-right: auto;
+}
+
+.ShortcutDialog .ShortcutSave {
+    background: #eee;
+    color: #181818;
+    border-color: #eee;
+}
+
+.ShortcutDialog .ShortcutSave:hover {
+    background: #ccc;
+}
+
+@media (max-width: 40rem) {
+    .MenuHeader.MenuHeaderWithSettings {
+        padding-right: 1rem;
+    }
+
+    .ShortcutSettings {
+        position: static;
+        margin-top: 0.75rem;
+        max-width: none;
+    }
+
+    .MenuHeader .ShortcutSaveStatus {
+        max-width: none;
+    }
+}

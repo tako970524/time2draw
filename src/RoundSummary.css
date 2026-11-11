@@ -1,0 +1,69 @@
+/* RoundSummary.css：獨立結算頁樣式；動畫裝飾、成績區及操作區可分別修改。 */
+.RoundSummary {
+    width: 100%; /* 填滿頁面寬度。 */
+    height: 100dvh; /* 使用實際可見視窗高度。 */
+    display: grid; /* 結算卡片置中。 */
+    overflow-y: auto; /* 小螢幕或橫向時可上下捲動。 */
+    padding: clamp(1rem, 4vw, 3rem); /* 響應式頁面留白。 */
+    background: #181c1b; /* 結算背景。 */
+}
+.SummaryCard {
+    align-self: center; /* 空間足夠時垂直置中。 */
+    justify-self: center; /* 水平置中。 */
+    width: min(100%, 42rem); /* 限制桌面閱讀寬度。 */
+    padding: clamp(1.25rem, 4vw, 2.5rem); /* 卡片內距。 */
+    border: 1px solid #414b46; /* 卡片邊框。 */
+    border-radius: 0.75rem; /* 結算卡片圓角。 */
+    background: #222925; /* 結算內容底色。 */
+    text-align: center; /* 結算文字置中。 */
+    animation: summaryEnter 450ms ease both; /* 預設卡片進場，可替換自訂動畫。 */
+}
+/* 切換遮罩仍在播放時先暫停進場，避免卡片動畫在看不到的時間裡播完。 */
+.PageTransitionPage[inert] .SummaryCard { animation-play-state: paused; }
+.SummaryAnimation {
+    display: grid; /* 動畫區置中。 */
+    place-items: center; /* 水平與垂直對齊。 */
+    margin-bottom: 1.25rem; /* 動畫與模式名稱間距。 */
+}
+.SummaryAnimation video, .SummaryAnimation img {
+    max-width: 100%; /* 自訂 AE 素材不超出卡片。 */
+    max-height: 10rem; /* 限制動畫區高度。 */
+    object-fit: contain; /* 完整保留素材比例。 */
+}
+.SummaryMark { display: flex; gap: 0.4rem; transform: skewX(-14deg); } /* 預設三條平行四邊形裝飾。 */
+.SummaryMark i { width: 0.75rem; height: 2rem; background: #a3e0c5; } /* 裝飾柱大小與顏色。 */
+.SummaryMark i:nth-child(2) { opacity: 0.6; } /* 第二柱的透明度。 */
+.SummaryMark i:nth-child(3) { opacity: 0.3; } /* 第三柱的透明度。 */
+.SummaryMode { color: #a3b9ac; font-size: 0.75rem; letter-spacing: 0.12em; } /* 模式名稱。 */
+.SummaryCard h1 { font-size: clamp(1.4rem, 4vw, 2rem); margin: 0.5rem 0; } /* 結算標題。 */
+.SummaryCaption { color: #a5b2ab; font-size: 0.85rem; } /* 完成題數說明。 */
+.SummaryAverage { display: grid; gap: 0.3rem; margin: 1.5rem 0; } /* 平均分數區。 */
+.SummaryAverage > span { font-size: 0.8rem; color: #bbcbc1; } /* 平均分數標籤。 */
+.SummaryAverage > strong { font-size: clamp(2.8rem, 9vw, 4.5rem); color: #a3e0c5; line-height: 1.1; } /* 最大字級顯示平均。 */
+.SummaryAverage small { font-size: 1rem; font-weight: normal; color: #a5b2ab; } /* 滿分標記。 */
+.SummaryScores {
+    display: grid; /* 各題成績網格。 */
+    grid-template-columns: repeat(5, minmax(0, 1fr)); /* 桌面每行五題。 */
+    gap: 0.6rem; /* 成績格間距。 */
+    list-style: none; /* 移除預設清單編號。 */
+    text-align: left; /* 各題資料靠左。 */
+}
+.SummaryScores li { display: grid; gap: 0.4rem; padding: 0.8rem; background: #18221c; border-radius: 0.35rem; } /* 單題成績格。 */
+.SummaryScores span { font-size: 0.7rem; color: #a5b2ab; } /* 題號字級與顏色。 */
+.SummaryScores strong { font-size: 1.25rem; } /* 單題分數。 */
+.SummaryScores small { font-size: 0.65rem; color: #a5b2ab; font-weight: normal; } /* 分數單位。 */
+.SummaryActions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; } /* 重試與退出操作。 */
+.SummaryActions button { flex: 1 1 10rem; min-height: 2.85rem; padding: 0.6rem 1rem; border-radius: 0.4rem; cursor: pointer; } /* 可觸控操作按鈕。 */
+.SummaryRetry { background: #a3e0c5; color: #12271e; border: 0; font-weight: bold; } /* 主要重試操作。 */
+.SummaryExit { background: transparent; color: #d6ddda; border: 1px solid #64736a; } /* 次要退出操作。 */
+@keyframes summaryEnter {
+    from { opacity: 0; transform: translateY(0.75rem); } /* 進場起始狀態。 */
+    to { opacity: 1; transform: translateY(0); } /* 進場完成狀態。 */
+}
+@media (max-width: 40rem) {
+    .SummaryScores { grid-template-columns: repeat(2, minmax(0, 1fr)); } /* 手機每行兩題。 */
+    .SummaryCard { padding: 1.25rem; } /* 手機卡片留白。 */
+}
+@media (prefers-reduced-motion: reduce) {
+    .SummaryCard { animation: none; } /* 尊重系統減少動態效果設定。 */
+}
